@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: techspec-demo-2025-05-08-01-Create table users
+      author: Arkadiy.Tikhonov
+      sql:
+        CREATE TABLE IF NOT EXISTS public.users (
+        id bigint NOT NULL,
+        first_name character varying(100) COLLATE pg_catalog."default",
+        last_name character varying(100) COLLATE pg_catalog."default",
+        second_name character varying(100) COLLATE pg_catalog."default",
+        email character varying(100) COLLATE pg_catalog."default",
+        phone character varying(100) COLLATE pg_catalog."default",
+        telegram character varying(100) COLLATE pg_catalog."default",
+        CONSTRAINT pk_users PRIMARY KEY (id)
+        );
+      rollback:
+        DROP TABLE IF EXISTS users;
+  - changeSet:
+      id: techspec-demo-2025-05-08-02-Create table services
+      author: Arkadiy.Tikhonov
+      sql:
+        CREATE TABLE IF NOT EXISTS services (
+        id bigint NOT NULL,
+        name character varying(100) COLLATE pg_catalog."default",
+        CONSTRAINT pk_services PRIMARY KEY (id)
+        );
+      rollback:
+        DROP TABLE IF EXISTS banner_types_by_catergory;
+  - changeSet:
+      id: techspec-demo-2025-04-19-03-Create table subscriptions
+      author: Arkadiy.Tikhonov
+      sql:
+        CREATE TABLE subscriptions (
+        id bigint NOT NULL,
+        user_id bigint NOT NULL,
+        service_id bigint NOT NULL,
+        CONSTRAINT pk_subscriptions PRIMARY KEY (id),
+        CONSTRAINT fk_users FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE SET NULL
+        ON DELETE SET NULL,
+        CONSTRAINT fk_services FOREIGN KEY (service_id)
+        REFERENCES public.services (id) MATCH SIMPLE
+        ON UPDATE SET NULL
+        ON DELETE SET NULL
+        );
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_subscriptions_user_service
+           ON public.subscriptions USING btree
+             (user_id ASC NULLS LAST, service_id ASC NULLS LAST)
+            TABLESPACE pg_default;
