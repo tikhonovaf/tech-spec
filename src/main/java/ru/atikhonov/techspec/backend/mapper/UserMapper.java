@@ -2,11 +2,12 @@ package ru.atikhonov.techspec.backend.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.stereotype.User;
+import org.springframework.stereotype.Service;
 import ru.atikhonov.techspec.backend.dto.UserInDto;
-import ru.atikhonov.techspec.backend.dto.UserViewDto;
+import ru.atikhonov.techspec.backend.dto.UserDto;
 import ru.atikhonov.techspec.backend.model.Subscriptions;
-import ru.atikhonov.techspec.backend.repository.UserRepository;
+import ru.atikhonov.techspec.backend.model.Users;
+import ru.atikhonov.techspec.backend.repository.UsersRepository;
 import ru.atikhonov.techspec.backend.repository.UsersRepository;
 import ru.atikhonov.techspec.backend.repository.UsersRepository;
 import ru.atikhonov.techspec.backend.util.CoreUtil;
@@ -27,7 +28,7 @@ public class UserMapper {
      * @param entity - строка из entity
      * @return Данные в структуре DTO
      */
-    public UserDto fromEntityToDto(Object entity) {
+    public UserDto fromEntityToDto(Users entity) {
         UserDto result = new UserDto();
         CoreUtil.patch(entity, result);
         return result;
@@ -39,8 +40,8 @@ public class UserMapper {
      * @param dto - строка из DTO
      * @return данные в структуре Entity
      */
-    public Subscriptions fromDtoToEntity(UserInDto dto) {
-        Subscriptions result = new Subscriptions();
+    public Users fromDtoToEntity(UserInDto dto) {
+        Users result = new Users();
         CoreUtil.patch(dto, result);
 
         return result;

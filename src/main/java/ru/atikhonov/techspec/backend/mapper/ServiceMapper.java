@@ -2,11 +2,12 @@ package ru.atikhonov.techspec.backend.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.atikhonov.techspec.backend.dto.ServiceDto;
 import ru.atikhonov.techspec.backend.dto.ServiceInDto;
-import ru.atikhonov.techspec.backend.dto.ServiceViewDto;
+import ru.atikhonov.techspec.backend.model.Services;
 import ru.atikhonov.techspec.backend.model.Subscriptions;
 import ru.atikhonov.techspec.backend.repository.ServicesRepository;
-import ru.atikhonov.techspec.backend.repository.ServiceRepository;
+import ru.atikhonov.techspec.backend.repository.ServicesRepository;
 import ru.atikhonov.techspec.backend.util.CoreUtil;
 
 import java.util.Optional;
@@ -37,8 +38,8 @@ public class ServiceMapper {
      * @param dto - строка из DTO
      * @return данные в структуре Entity
      */
-    public Subscriptions fromDtoToEntity(ServiceInDto dto) {
-        Subscriptions result = new Subscriptions();
+    public Services fromDtoToEntity(ServiceInDto dto) {
+        Services result = new Services();
         CoreUtil.patch(dto, result);
 
         return result;

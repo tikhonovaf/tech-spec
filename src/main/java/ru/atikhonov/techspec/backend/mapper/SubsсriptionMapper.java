@@ -2,15 +2,15 @@ package ru.atikhonov.techspec.backend.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.stereotype.Subsription;
-import ru.atikhonov.techspec.backend.dto.SubsriptionInDto;
-import ru.atikhonov.techspec.backend.dto.SubsriptionViewDto;
+import ru.atikhonov.techspec.backend.dto.SubscriptionInDto;
+import ru.atikhonov.techspec.backend.dto.SubscriptionViewDto;
 import ru.atikhonov.techspec.backend.model.Services;
 import ru.atikhonov.techspec.backend.model.Subscriptions;
+import ru.atikhonov.techspec.backend.model.SubscriptionsView;
 import ru.atikhonov.techspec.backend.model.Users;
 import ru.atikhonov.techspec.backend.repository.ServicesRepository;
-import ru.atikhonov.techspec.backend.repository.SubsriptionRepository;
-import ru.atikhonov.techspec.backend.repository.SubsriptionsRepository;
+import ru.atikhonov.techspec.backend.repository.SubscriptionsViewRepository;
+import ru.atikhonov.techspec.backend.repository.SubscriptionsRepository;
 import ru.atikhonov.techspec.backend.repository.SubscriptionsRepository;
 import ru.atikhonov.techspec.backend.repository.UsersRepository;
 import ru.atikhonov.techspec.backend.util.CoreUtil;
@@ -36,8 +36,8 @@ public class SubsсriptionMapper {
      * @param view - строка из entity
      * @return Данные в структуре DTO
      */
-    public SubsriptionViewDto fromViewToDto(Object view) {
-        SubsriptionViewDto result = new SubsriptionViewDto();
+    public SubscriptionViewDto fromViewToDto(SubscriptionsView view) {
+        SubscriptionViewDto result = new SubscriptionViewDto();
         CoreUtil.patch(view, result);
         return result;
     }
@@ -48,7 +48,7 @@ public class SubsсriptionMapper {
      * @param dto - строка из DTO
      * @return данные в структуре Entity
      */
-    public Subscriptions fromDtoToEntity(SubsriptionInDto dto) {
+    public Subscriptions fromDtoToEntity(SubscriptionInDto dto) {
         Subscriptions result = new Subscriptions();
         CoreUtil.patch(dto, result);
 
@@ -64,7 +64,7 @@ public class SubsсriptionMapper {
         if (dto.getServiceId() != null) {
             Optional<Services> servicesOptional = servicesRepository.findById(dto.getServiceId());
             if (servicesOptional.isPresent()) {
-                result.setUser(servicesOptional.get());
+                result.setService(servicesOptional.get());
             }
         } else {
             result.setUser(null);

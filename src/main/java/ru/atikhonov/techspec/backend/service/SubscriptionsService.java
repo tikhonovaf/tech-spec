@@ -1,38 +1,24 @@
 package ru.atikhonov.techspec.backend.service;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.stereotype.Subscriptions;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.multipart.MultipartFile;
-import ru.atikhonov.techspec.backend.api.RefApi;
+import org.springframework.stereotype.Service;
+import ru.atikhonov.techspec.backend.api.ApiUtil;
 import ru.atikhonov.techspec.backend.api.SubscriptionsApi;
 import ru.atikhonov.techspec.backend.api.SubscriptionsApiDelegate;
-import ru.atikhonov.techspec.backend.dto.ServiceInDto;
-import ru.atikhonov.techspec.backend.dto.ServicesViewDto;
-import ru.atikhonov.techspec.backend.dto.FileDto;
-import ru.atikhonov.techspec.backend.dto.SubscriptionsInDto;
-import ru.atikhonov.techspec.backend.exception.ValidateException;
+import ru.atikhonov.techspec.backend.dto.*;
 import ru.atikhonov.techspec.backend.mapper.ServiceMapper;
-import ru.atikhonov.techspec.backend.mapper.SubscriptionsMapper;
 import ru.atikhonov.techspec.backend.mapper.SubsсriptionMapper;
 import ru.atikhonov.techspec.backend.mapper.UserMapper;
 import ru.atikhonov.techspec.backend.model.Services;
+import ru.atikhonov.techspec.backend.model.Subscriptions;
 import ru.atikhonov.techspec.backend.model.SubscriptionsView;
 import ru.atikhonov.techspec.backend.model.Users;
 import ru.atikhonov.techspec.backend.repository.*;
-import ru.atikhonov.techspec.backend.model.Subscriptions;
 import ru.atikhonov.techspec.backend.util.CoreUtil;
 
-import java.net.URLEncoder;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,7 +30,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class Subscriptions implements SubscriptionsApiDelegate {
+public class SubscriptionsService implements SubscriptionsApiDelegate {
 
     private final ServicesRepository servicesRepository;
     private final ServiceMapper serviceMapper;
@@ -65,7 +51,6 @@ public class Subscriptions implements SubscriptionsApiDelegate {
      *
      * @param userInDto (optional)
      * @return Пустой ответ (status code 200)
-     * @see RefApi#addUser
      */
     @Override
     public ResponseEntity<Void> addUser(UserInDto userInDto) {
@@ -81,7 +66,6 @@ public class Subscriptions implements SubscriptionsApiDelegate {
      *
      * @param userId ИД элемента справочника (required)
      * @return Пустой ответ (status code 200)
-     * @see RefApi#deleteUser
      */
     @Override
     public ResponseEntity<Void> deleteUser(Long userId) {
@@ -98,11 +82,10 @@ public class Subscriptions implements SubscriptionsApiDelegate {
      * GET : Выборка списка пользователей
      *
      * @return Список пользователей (status code 200)
-     * @see RefApi#getUsers
      */
     @Override
-    public ResponseEntity<List<UserDtos>> getUsers() {
-        List<UserDtos> result =
+    public ResponseEntity<List<UserDto>> getUsers() {
+        List<UserDto> result =
                 usersRepository
                         .findAll()
                         .stream()
@@ -116,7 +99,6 @@ public class Subscriptions implements SubscriptionsApiDelegate {
      *
      * @param userId ИД элемента справочника (required)
      * @return Данные по элементу справочника (status code 200)
-     * @see RefApi#getUser
      */
     @Override
     public ResponseEntity<UserDto> getUser(Long userId) {
@@ -136,7 +118,6 @@ public class Subscriptions implements SubscriptionsApiDelegate {
      * @param userId    ИД (required)
      * @param userInDto (optional)
      * @return Пустое значение (status code 200)
-     * @see RefApi#modifyUser
      */
     @Override
     public ResponseEntity<Void> modifyUser(Long userId,
@@ -144,7 +125,7 @@ public class Subscriptions implements SubscriptionsApiDelegate {
         if (usersRepository.findById(userId).isPresent()) {
 
             Users entity = usersRepository.findById(userId).get();
-            Users entityNew = usersMap.fromDtoToEntity(userInDto);
+            Users entityNew = userMapper.fromDtoToEntity(userInDto);
             CoreUtil.patch(entityNew, entity);
             usersRepository.save(entity);
         }
@@ -160,7 +141,6 @@ public class Subscriptions implements SubscriptionsApiDelegate {
      *
      * @param serviceInDto (optional)
      * @return Пустой ответ (status code 200)
-     * @see RefApi#addService
      */
     @Override
     public ResponseEntity<Void> addService(ServiceInDto serviceInDto) {
@@ -176,7 +156,6 @@ public class Subscriptions implements SubscriptionsApiDelegate {
      *
      * @param serviceId ИД элемента справочника (required)
      * @return Пустой ответ (status code 200)
-     * @see RefApi#deleteService
      */
     @Override
     public ResponseEntity<Void> deleteService(Long serviceId) {
@@ -193,11 +172,10 @@ public class Subscriptions implements SubscriptionsApiDelegate {
      * GET : Выборка списка типов сервисов
      *
      * @return Список типов сервисов (status code 200)
-     * @see RefApi#getServices
      */
     @Override
-    public ResponseEntity<List<ServiceDtos>> getServices() {
-        List<ServiceDtos> result =
+    public ResponseEntity<List<ServiceDto>> getServices() {
+        List<ServiceDto> result =
                 servicesRepository
                         .findAll()
                         .stream()
@@ -206,15 +184,40 @@ public class Subscriptions implements SubscriptionsApiDelegate {
         return ResponseEntity.ok(result);
     }
 
+
+
     /**
-     * GET : Выборка типа сервиса
+     * GET /subscriptions/services/{serviceId} : Выборка сервиса
      *
-     * @param serviceId ИД элемента справочника (required)
-     * @return Данные по элементу справочника (status code 200)
-     * @see RefApi#getService
+     * @param serviceId ИД сервиса (required)
+     * @return Сервис (status code 200)
+     * @see SubscriptionsApi#getService
      */
-    @Override
     public ResponseEntity<ServiceDto> getService(Long serviceId) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"name\" : \"Наименование сервиса 1\", \"id\" : 1 }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+
+    /**
+     * GET /subscriptions/services/{serviceId} : Выборка сервиса
+     *
+     * @param serviceId ИД сервиса (required)
+     * @return Сервис (status code 200)
+     * @see SubscriptionsApi#getService
+     */
+    public ResponseEntity<ServiceDto> getService2222(Long serviceId) {
+
         Optional<Services> serviceOptional = servicesRepository.findById(serviceId);
         if (serviceOptional.isPresent()) {
             ServiceDto result = serviceMapper
@@ -231,7 +234,6 @@ public class Subscriptions implements SubscriptionsApiDelegate {
      * @param serviceId    ИД (required)
      * @param serviceInDto (optional)
      * @return Пустое значение (status code 200)
-     * @see RefApi#modifyService
      */
     @Override
     public ResponseEntity<Void> modifyService(Long serviceId,
@@ -239,7 +241,7 @@ public class Subscriptions implements SubscriptionsApiDelegate {
         if (servicesRepository.findById(serviceId).isPresent()) {
 
             Services entity = servicesRepository.findById(serviceId).get();
-            Services entityNew = servicesMap.fromDtoToEntity(serviceInDto);
+            Services entityNew = serviceMapper.fromDtoToEntity(serviceInDto);
             CoreUtil.patch(entityNew, entity);
             servicesRepository.save(entity);
         }
@@ -251,13 +253,12 @@ public class Subscriptions implements SubscriptionsApiDelegate {
     /**
      * POST: Добавление подписки
      *
-     * @param subscriptionsInDto
      * @return Пустой ответ (status code 200)
      */
     @Override
-    public ResponseEntity<Void> addSubscriptions(SubscriptionsInDto subscriptionsInDto) {
+    public ResponseEntity<Void> addSubscriptions(SubscriptionInDto subscriptionInDto) {
         //  Нужно проверять уникальность подписки
-        Subscriptions subscriptionNew = subscriptionMapper.fromDtoToEntity(subscriptionInDto);
+        Subscriptions subscriptionNew = subsсriptionMapper.fromDtoToEntity(subscriptionInDto);
         subscriptionsRepository.save(subscriptionNew);
 
         return ResponseEntity.noContent().build();
@@ -265,13 +266,13 @@ public class Subscriptions implements SubscriptionsApiDelegate {
     }
 
     /**
-     * DELETE /demo2000/Subscriptions/{subscriptionId} : Удаление подписки
+     *  Удаление подписки
      *
      * @param subscriptionId ИД подписки (required)
      * @return Пустой ответ (status code 200)
      */
     @Override
-    public ResponseEntity<Void> deleteSubscriptions(Long subscriptionId) {
+    public ResponseEntity<Void> deleteSubscription(Long subscriptionId) {
         if (subscriptionsRepository.findById(subscriptionId).isPresent()) {
             Subscriptions subscription = subscriptionsRepository.findById(subscriptionId).get();
         }
@@ -281,16 +282,16 @@ public class Subscriptions implements SubscriptionsApiDelegate {
     }
 
     /**
-     * GET /demo2000/Services/{subscriptionId} : Выборка сервиса
+     * Выборка подлписки
      *
      * @param subscriptionId ИД элемента справочника (required)
      * @return Данные по элементу справочника (status code 200)
      */
     @Override
-    public ResponseEntity<SubscriptionViewDto> getService(Long subscriptionId) {
+    public ResponseEntity<SubscriptionViewDto> getSubscription(Long subscriptionId) {
         Optional<SubscriptionsView> subscriptionsView = subscriptionsViewRepository.findById(subscriptionId);
         if (subscriptionsView.isPresent()) {
-            SubscriptionViewDto result = subscriptionMapper
+            SubscriptionViewDto result = subsсriptionMapper
                     .fromViewToDto(subscriptionsViewRepository.findById(subscriptionId).get());
             return ResponseEntity.ok(result);
         } else {
@@ -304,11 +305,11 @@ public class Subscriptions implements SubscriptionsApiDelegate {
      * @return Список подписок (status code 200)
      */
     @Override
-    public ResponseEntity<List<SubscriptionViewDto>> getServices(String requestType) {
+    public ResponseEntity<List<SubscriptionViewDto>> getSubscriptions() {
         List<SubscriptionViewDto> result = subscriptionsViewRepository
                             .findAll()
                             .stream()
-                            .map(v -> subscriptionMapper.fromViewToDto(v))
+                            .map(v -> subsсriptionMapper.fromViewToDto(v))
                             .collect(Collectors.toList());
         return ResponseEntity.ok(result);
     }
