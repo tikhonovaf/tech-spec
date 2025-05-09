@@ -4,11 +4,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.atikhonov.techspec.backend.model.Subscriptions;
+import ru.atikhonov.techspec.backend.model.Users;
 
 import java.util.List;
 
 
 public interface SubscriptionsRepository extends JpaRepository<Subscriptions, Long> {
+
+    public List<Subscriptions> findByUser(Users user);
 
     @Query(value = " " +
             " select *\n" +

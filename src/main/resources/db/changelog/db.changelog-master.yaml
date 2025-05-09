@@ -1,11 +1,4 @@
 databaseChangeLog:
-  - changeSet:
-      id: deep2000-demo-2025-05-08-01-Create hibernate_sequence
-      author: Arkadiy.Tikhonov
-      sql:
-        CREATE SEQUENCE IF NOT EXISTS users_seq START WITH  1000;
-        CREATE SEQUENCE IF NOT EXISTS services_seq START WITH  1000;
-        CREATE SEQUENCE IF NOT EXISTS subscriptions_seq START WITH  1000;
 
   - changeSet:
       id: techspec-demo-2025-05-08-02-Create table users
@@ -123,3 +116,11 @@ databaseChangeLog:
         JOIN R on R.service_id =  s.id
         ORDER BY r.rate DESC
         LIMIT 3;
+
+  - changeSet:
+      id: deep2000-demo-2025-05-09-03-Create hibernate_sequence
+      author: Arkadiy.Tikhonov
+      sql:
+        CREATE SEQUENCE IF NOT EXISTS users_seq START WITH  1000;
+        CREATE SEQUENCE IF NOT EXISTS services_seq START WITH  1000;
+        CREATE SEQUENCE IF NOT EXISTS subscriptions_seq START WITH  1000;

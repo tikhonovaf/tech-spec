@@ -11,7 +11,6 @@ import ru.atikhonov.techspec.backend.model.Users;
 import ru.atikhonov.techspec.backend.repository.ServicesRepository;
 import ru.atikhonov.techspec.backend.repository.SubscriptionsViewRepository;
 import ru.atikhonov.techspec.backend.repository.SubscriptionsRepository;
-import ru.atikhonov.techspec.backend.repository.SubscriptionsRepository;
 import ru.atikhonov.techspec.backend.repository.UsersRepository;
 import ru.atikhonov.techspec.backend.util.CoreUtil;
 

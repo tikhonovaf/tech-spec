@@ -35,7 +35,7 @@ public class ServiceMapper {
     }
 
     /**
-     * Маппингиз DTO в Entity
+     * Маппинг из DTO в Entity
      *
      * @param dto - строка из DTO
      * @return данные в структуре Entity

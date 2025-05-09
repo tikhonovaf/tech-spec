@@ -1,12 +1,9 @@
 package ru.atikhonov.techspec.backend.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 // import jakarta.validation.constraints.NotNull;
 
 /**
@@ -21,7 +18,15 @@ public class Services {
      * Идентификатор
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "services_seq"
+    )
+    @SequenceGenerator(
+            name = "services_seq",
+            sequenceName = "services_seq",
+            allocationSize = 1
+    )
     Long id;
 
     /**

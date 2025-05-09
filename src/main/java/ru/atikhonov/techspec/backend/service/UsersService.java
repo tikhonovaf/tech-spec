@@ -70,9 +70,11 @@ public class UsersService implements UsersApiDelegate {
      */
     @Override
     public ResponseEntity<Void> deleteUser(Long userId) {
-        Optional<Users> userOptional = usersRepository.findById(userId);
-        if (userOptional.isPresent()) {
-            usersRepository.delete(userOptional.get());
+        if (usersRepository.findById(userId).isPresent()) {
+            Users user = usersRepository.findById(userId).get();
+            List <Subscriptions> subscriptions = subscriptionsRepository.findByUser(user);
+            subscriptionsRepository.deleteAll(subscriptions);
+            usersRepository.delete(user);
         }
         return ResponseEntity.noContent().build();
 

@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableScheduling
 @OpenAPIDefinition
 @ComponentScan(basePackages = {"ru.atikhonov"})
 public class ApplicationBe {

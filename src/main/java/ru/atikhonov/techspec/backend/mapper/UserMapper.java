@@ -2,17 +2,12 @@ package ru.atikhonov.techspec.backend.mapper;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.stereotype.Service;
 import ru.atikhonov.techspec.backend.dto.UserInDto;
 import ru.atikhonov.techspec.backend.dto.UserDto;
-import ru.atikhonov.techspec.backend.model.Subscriptions;
 import ru.atikhonov.techspec.backend.model.Users;
-import ru.atikhonov.techspec.backend.repository.UsersRepository;
-import ru.atikhonov.techspec.backend.repository.UsersRepository;
 import ru.atikhonov.techspec.backend.repository.UsersRepository;
 import ru.atikhonov.techspec.backend.util.CoreUtil;
 
-import java.util.Optional;
 
 /**
  * Маппинг:

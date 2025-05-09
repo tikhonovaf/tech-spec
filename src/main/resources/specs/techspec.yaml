@@ -96,81 +96,7 @@ paths:
           description: Пустой ответ
 
 #  сервисы
-  /services/{serviceId}:
-    get:
-      summary: Выборка типа сервиса
-      operationId: getService
-      tags:
-        - Subscription
-      parameters:
-        - name: serviceId
-          description: ИД сервиса
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          description: Сервис
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/serviceDto"
-
-    put:
-      summary: Изменение сервиса
-      operationId: modifyService
-      tags:
-        - Subscription
-      parameters:
-        - name: serviceId
-          description: ИД сервиса
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/serviceInDto"
-      responses:
-        200:
-          description: Пустой ответ
-
-    delete:
-      summary: Удаление сервиса
-      operationId: deleteService
-      tags:
-        - Subscription
-      parameters:
-        - name: serviceId
-          description: ИД сервиса
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          description: Пустой ответ
-
   /services:
-    post:
-      summary: Добавление сервиса
-      operationId: addService
-      tags:
-        - Subscription
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/serviceInDto"
-      responses:
-        200:
-          description: Пустой ответ
     get:
       summary: Выборка списка типов сервисов
       operationId: getServices
@@ -332,10 +258,6 @@ components:
           format: int64
           description: Идентификатор
           example: 1
-        name:
-          type: string
-          description: Наименование
-          example: Наименование  1
         userId:
           type: integer
           format: int64

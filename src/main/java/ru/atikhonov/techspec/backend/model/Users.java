@@ -18,7 +18,15 @@ public class Users {
      * Идентификатор
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "users_seq"
+    )
+    @SequenceGenerator(
+            name = "users_seq",
+            sequenceName = "users_seq",
+            allocationSize = 1
+    )
     Long id;
 
     /**

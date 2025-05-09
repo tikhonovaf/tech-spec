@@ -39,40 +39,6 @@ public class ServiceService implements ServicesApiDelegate {
     private final ServicesRepository servicesRepository;
     private final ServiceMapper serviceMapper;
 
-//   Сервисы для типов сервисов
-
-    /**
-     * POST : Добавление типа сервиса
-     *
-     * @param serviceInDto (optional)
-     * @return Пустой ответ (status code 200)
-     */
-    @Override
-    public ResponseEntity<Void> addService(ServiceInDto serviceInDto) {
-        Services service = serviceMapper.fromDtoToEntity(serviceInDto);
-        servicesRepository.save(service);
-
-        return ResponseEntity.noContent().build();
-
-    }
-
-    /**
-     * DELETE : Удаление типа сервиса
-     *
-     * @param serviceId ИД элемента справочника (required)
-     * @return Пустой ответ (status code 200)
-     */
-    @Override
-    public ResponseEntity<Void> deleteService(Long serviceId) {
-        Optional<Services> serviceOptional = servicesRepository.findById(serviceId);
-        if (serviceOptional.isPresent()) {
-            servicesRepository.delete(serviceOptional.get());
-        }
-        return ResponseEntity.noContent().build();
-
-    }
-
-
     /**
      * GET : Выборка списка типов сервисов
      *
