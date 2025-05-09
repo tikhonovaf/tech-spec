@@ -24,9 +24,9 @@ public class SubscriptionsView {
     Long id;
 
     Long userId;
-    String  userFirstName;
-    String  userLastName;
-    String  userSecondName;
+    String  firstName;
+    String  lastName;
+    String  secondName;
 
     Long serviceId;
     String  serviceName;

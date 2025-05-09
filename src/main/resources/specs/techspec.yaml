@@ -98,7 +98,7 @@ paths:
 #  сервисы
   /services/{serviceId}:
     get:
-      summary: Выборка сервиса
+      summary: Выборка типа сервиса
       operationId: getService
       tags:
         - Subscription
@@ -172,7 +172,7 @@ paths:
         200:
           description: Пустой ответ
     get:
-      summary: Выборка списка подписок
+      summary: Выборка списка типов сервисов
       operationId: getServices
       tags:
         - Subscription
