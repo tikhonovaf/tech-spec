@@ -23,7 +23,7 @@ public class SubscriptionsView {
     @GeneratedValue
     Long id;
 
-    Long user_id;
+    Long userId;
     String  userFirstName;
     String  userLastName;
     String  userSecondName;

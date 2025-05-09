@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.atikhonov.techspec.backend.dto.ServiceDto;
 import ru.atikhonov.techspec.backend.dto.ServiceInDto;
+import ru.atikhonov.techspec.backend.dto.SubscriptionsTopViewDto;
 import ru.atikhonov.techspec.backend.model.Services;
 import ru.atikhonov.techspec.backend.model.Subscriptions;
+import ru.atikhonov.techspec.backend.model.SubscriptionsTopView;
 import ru.atikhonov.techspec.backend.repository.ServicesRepository;
 import ru.atikhonov.techspec.backend.repository.ServicesRepository;
 import ru.atikhonov.techspec.backend.util.CoreUtil;
@@ -44,6 +46,19 @@ public class ServiceMapper {
 
         return result;
     }
+
+    /**
+     * Маппинг из view в DTO
+     *
+     * @param view - строка из view
+     * @return Данные в структуре DTO
+     */
+    public SubscriptionsTopViewDto fromViewToDto(SubscriptionsTopView view) {
+        SubscriptionsTopViewDto result = new SubscriptionsTopViewDto();
+        CoreUtil.patch(view, result);
+        return result;
+    }
+
 }
 
 

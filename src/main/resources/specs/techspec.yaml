@@ -7,12 +7,12 @@ servers:
 paths:
 
 #  Пользователи
-  /subscriptions/users/{id}:
+  /users/{id}:
     get:
       summary: Выборка пользователя
       operationId: getUser
       tags:
-        - SUBSCRIPTIONS
+        - Subscription
       parameters:
         - name: id
           description: ИД пользователя
@@ -29,11 +29,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/userDto"
 
-    patch:
+    put:
       summary: Изменение пользователя
       operationId: modifyUser
       tags:
-        - SUBSCRIPTIONS
+        - Subscription
       parameters:
         - name: id
           description: ИД пользователя
@@ -55,7 +55,7 @@ paths:
       summary: Удаление пользователя
       operationId: deleteUser
       tags:
-        - SUBSCRIPTIONS
+        - Subscription
       parameters:
         - name: id
           description: ИД пользователя
@@ -68,12 +68,12 @@ paths:
         200:
           description: Пустой ответ
 
-  /subscriptions/users:
+  /users:
     get:
       summary: Выборка списка пользователей
       operationId: getUsers
       tags:
-        - SUBSCRIPTIONS
+        - Subscription
       responses:
         200:
           description: Список пользователей
@@ -85,7 +85,7 @@ paths:
       summary: Добавление пользователя
       operationId: addUser
       tags:
-        - SUBSCRIPTIONS
+        - Subscription
       requestBody:
         content:
           application/json:
@@ -96,12 +96,12 @@ paths:
           description: Пустой ответ
 
 #  сервисы
-  /subscriptions/services/{serviceId}:
+  /services/{serviceId}:
     get:
       summary: Выборка сервиса
       operationId: getService
       tags:
-        - SUBSCRIPTIONS
+        - Subscription
       parameters:
         - name: serviceId
           description: ИД сервиса
@@ -118,11 +118,11 @@ paths:
               schema:
                 $ref: "#/components/schemas/serviceDto"
 
-    patch:
+    put:
       summary: Изменение сервиса
       operationId: modifyService
       tags:
-        - SUBSCRIPTIONS
+        - Subscription
       parameters:
         - name: serviceId
           description: ИД сервиса
@@ -144,7 +144,7 @@ paths:
       summary: Удаление сервиса
       operationId: deleteService
       tags:
-        - SUBSCRIPTIONS
+        - Subscription
       parameters:
         - name: serviceId
           description: ИД сервиса
@@ -157,12 +157,12 @@ paths:
         200:
           description: Пустой ответ
 
-  /subscriptions/services:
+  /services:
     post:
       summary: Добавление сервиса
       operationId: addService
       tags:
-        - SUBSCRIPTIONS
+        - Subscription
       requestBody:
         content:
           application/json:
@@ -175,7 +175,7 @@ paths:
       summary: Выборка списка подписок
       operationId: getServices
       tags:
-        - SUBSCRIPTIONS
+        - Subscription
       responses:
         200:
           description: Список сервисов
@@ -185,96 +185,92 @@ paths:
                 $ref: "#/components/schemas/serviceDtos"
 
 #   Подписки
-  /subscriptions:
-    post:
-      summary: Добавление подписки
-      operationId: addSubscriptions
+  /users/{userId}/subscriptions:
+    get:
+      summary: Выборка списка подписок пользователя
+      operationId: getSubscriptions
       tags:
-        - SUBSCRIPTIONS
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/subscriptionInDto"
+        - Subscription
+      parameters:
+        - name: userId
+          description: ИД пользователя
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Список подписок пользователя
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/subscriptionViewDtos"
+
+  /users/{userId}/subscriptions/{serviceId}:
+    post:
+      summary: Добавление подписки для пользователя
+      operationId: addSubscription
+      tags:
+        - Subscription
+      parameters:
+        - name: userId
+          description: ИД пользователя
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: serviceId
+          description: ИД сервиса
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Пустой ответ
+    delete:
+      summary: Удаление подписки для пользователя
+      operationId: deleteSubscription
+      tags:
+        - Subscription
+      parameters:
+        - name: userId
+          description: ИД подписки
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: serviceId
+          description: ИД сервиса
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         200:
           description: Пустой ответ
 
+  /subscriptions/top:
     get:
-      summary: Выборка списка подписок
-      operationId: getSubscriptions
+      summary: получить ТОП-3 популярных сервисов
+      operationId: getTopServices
       tags:
-        - SUBSCRIPTIONS
+        - Subscription
       responses:
         200:
           description: Список подписок
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/subscriptionViewDtos"
-
-  /subscriptions/{subscriptionId}:
-    patch:
-      summary: Изменение подписки
-      operationId: modifySubscription
-      tags:
-        - SUBSCRIPTIONS
-      parameters:
-        - name: subscriptionId
-          description: ИД подписки
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/subscriptionInDto"
-      responses:
-        200:
-          description: Пустое значение
-    get:
-      summary: Выборка подписки
-      operationId: getSubscription
-      tags:
-        - SUBSCRIPTIONS
-      parameters:
-        - name: subscriptionId
-          description: ИД подписки
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          description: Данные по подписке
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/subscriptionViewDto"
-    delete:
-      summary: Удаление подписки
-      operationId: deleteSubscription
-      tags:
-        - SUBSCRIPTIONS
-      parameters:
-        - name: subscriptionId
-          description: ИД подписки
-          in: path
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        200:
-          description: Пустой ответ
+                $ref: "#/components/schemas/subscriptionsTopViewDtos"
 
 components:
   schemas:
-
     serviceDtos:
       type: array
       description: Список сервисов
@@ -380,6 +376,30 @@ components:
           type: integer
           format: int64
           description: Идентификатор сервиса
+          example: 1
+
+    subscriptionsTopViewDtos:
+      type: array
+      description: Список топовых сервисов
+      items:
+        $ref: "#/components/schemas/subscriptionsTopViewDto"
+    subscriptionsTopViewDto:
+      type: object
+      description: Cервис с указанием количества подписок
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Идентификатор сервиса
+          example: 1
+        name:
+          type: string
+          description: Наименование сервиса
+          example: Наименование сервиса 1
+        rate:
+          type: integer
+          format: int64
+          description: Количество подписок на сервис
           example: 1
 
     userDtos:
